@@ -3,9 +3,9 @@ const sendBtn = document.querySelector(".bar-wrapper button");
 const messageBox = document.querySelector(".message-box");
 let selectedFile = null;  // Store the selected file
 const fileInput = document.getElementById('file-upload');
-const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=your api key";
+const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=YOUR API KEY";
 //api key has been disabled and saved in my device project file(html-css_chatbot clone)
-// Voice recognition
+// Voice recognition 
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 recognition.lang = 'en-US';
 recognition.continuous = false;
@@ -25,7 +25,7 @@ voiceBtn.onclick = () => {
 recognition.onresult = (event) => {
      const voiceMessage = event.results[0][0].transcript;
      messageBar.value = voiceMessage;
-}; 
+};
 
 recognition.onerror = (event) => {
      console.error("Voice recognition error: ", event.error);
@@ -51,6 +51,12 @@ fileInput.addEventListener('change', (event) => {
      }
 });
 
+// for auto scroll to next message
+
+function scrollToBottom() {
+     messageBox.scrollTop = messageBox.scrollHeight;
+}
+
 // Send message event listener
 sendBtn.onclick = function () {
      if (messageBar.value.length > 0 || selectedFile) {
@@ -68,7 +74,7 @@ sendBtn.onclick = function () {
             </div> 
             <img alt="" class="chatimguser" src="usericon.png">
         </div>`;
-
+          scrollToBottom();
           let response =
                `<img alt="" class="chatimgbot" src="chatbot.webp"> 
             <div class="chatresponse response chatresponseforcopy">
@@ -79,11 +85,12 @@ sendBtn.onclick = function () {
             </div>
             <br>`;
 
+          // scrollToBottom();  // Scroll after inserting user message
+
           messageBox.insertAdjacentHTML("beforeend", message);
-
-          setTimeout(() => {
+          setTimeout(() => { 
                messageBox.insertAdjacentHTML("beforeend", response);
-
+               scrollToBottom();  // Scroll after bot response is inserted
                // Create form data to send the file and message
                const formData = new FormData();
                formData.append('message', UserTypedMessage);
@@ -178,4 +185,4 @@ voiceBtn.addEventListener("keypress", function (event) {
      if (event.key === "Enter") {
           sendBtn.click();
      }
-});
+}); 
